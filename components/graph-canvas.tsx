@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, forwardRef } from 'react'
+import { useEffect, useRef, forwardRef, useImperativeHandle } from 'react'
 import { Button } from '@/components/ui/button'
 
 const COLORS = [
@@ -49,6 +49,8 @@ const GraphCanvas = forwardRef<HTMLCanvasElement, GraphCanvasProps>(
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const nodePositionsRef = useRef<Record<number, { x: number; y: number }>>({})
 
+    useImperativeHandle(ref, () => canvasRef.current as HTMLCanvasElement)
+
     // Calculate node positions in a circle layout
     const getNodePositions = () => {
       const positions: Record<number, { x: number; y: number }> = {}
@@ -90,8 +92,10 @@ const GraphCanvas = forwardRef<HTMLCanvasElement, GraphCanvasProps>(
       if (!canvas) return
 
       const rect = canvas.getBoundingClientRect()
-      const x = e.clientX - rect.left
-      const y = e.clientY - rect.top
+      const scaleX = canvas.width / rect.width
+      const scaleY = canvas.height / rect.height
+      const x = (e.clientX - rect.left) * scaleX
+      const y = (e.clientY - rect.top) * scaleY
 
       // Check if click is on any node
       for (const node of graph.nodes) {
@@ -112,8 +116,10 @@ const GraphCanvas = forwardRef<HTMLCanvasElement, GraphCanvasProps>(
       if (!canvas) return
 
       const rect = canvas.getBoundingClientRect()
-      const x = e.clientX - rect.left
-      const y = e.clientY - rect.top
+      const scaleX = canvas.width / rect.width
+      const scaleY = canvas.height / rect.height
+      const x = (e.clientX - rect.left) * scaleX
+      const y = (e.clientY - rect.top) * scaleY
 
       // Check if right-click is on any node
       for (const node of graph.nodes) {
@@ -133,7 +139,6 @@ const GraphCanvas = forwardRef<HTMLCanvasElement, GraphCanvasProps>(
         const pos2 = nodePositionsRef.current[v]
         if (!pos1 || !pos2) continue
 
-        // Check distance from point to line segment
         const distance = pointToLineDistance(x, y, pos1.x, pos1.y, pos2.x, pos2.y)
         if (distance < 10) {
           onRemoveEdge(u, v)
@@ -142,7 +147,6 @@ const GraphCanvas = forwardRef<HTMLCanvasElement, GraphCanvasProps>(
       }
     }
 
-    // Helper function to calculate distance from point to line segment
     const pointToLineDistance = (px: number, py: number, x1: number, y1: number, x2: number, y2: number): number => {
       const A = px - x1
       const B = py - y1
@@ -238,11 +242,7 @@ const GraphCanvas = forwardRef<HTMLCanvasElement, GraphCanvasProps>(
     return (
       <div className="space-y-4">
         <canvas
-          ref={(node) => {
-            canvasRef.current = node
-            if (typeof ref === 'function') ref(node)
-            else if (ref) ref.current = node
-          }}
+          ref={canvasRef}
           width={600}
           height={500}
           onClick={handleCanvasClick}
@@ -251,7 +251,7 @@ const GraphCanvas = forwardRef<HTMLCanvasElement, GraphCanvasProps>(
         />
         <div className="flex gap-2 flex-wrap">
           <Button onClick={onAddNode} variant="outline" size="sm">
-            Add Node
+            Agregar Nodo
           </Button>
         </div>
       </div>

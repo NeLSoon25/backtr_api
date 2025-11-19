@@ -73,7 +73,6 @@ export default function Home() {
     } else if (selectedNode === node) {
       setSelectedNode(null)
     } else {
-      // Check if edge already exists
       const edgeExists = graph.edges.some(
         ([u, v]) => (u === selectedNode && v === node) || (u === node && v === selectedNode)
       )
@@ -108,7 +107,6 @@ export default function Home() {
   const handleDownload = () => {
     if (!canvasRef.current) return
 
-    //convert canvas to blob and download as PNG
     canvasRef.current.toBlob((blob) => {
       if (!blob) return
       const url = URL.createObjectURL(blob)
@@ -121,7 +119,6 @@ export default function Home() {
   }
 
   const handleAddEdge = (u: number, v: number) => {
-    //verificamos si el nodo existe
     const edgeExists = graph.edges.some(
       ([existingU, existingV]) => (existingU === u && existingV === v) || (existingU === v && existingV === u)
     )
@@ -161,12 +158,10 @@ export default function Home() {
                 <p><strong>Instrucciones:</strong></p>
                 <p>Clickear dos nodos para unirlos</p>
                 <p>Click derecho para eliminar nodos/aristas</p>
-                <p>Nota: Si no funciona el click abrir la consola</p>
               </div>
             </div>
           </div>
 
-          {/* Right Panel - Controls */}
           <div className="space-y-6">
             <ControlPanel
               graph={graph}
