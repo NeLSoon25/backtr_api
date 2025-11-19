@@ -72,18 +72,13 @@ const GraphCanvas = forwardRef<HTMLCanvasElement, GraphCanvasProps>(
         return result?.colors[node]
       }
 
-      console.log('[v0] Step at', animationStep, ':', result.steps[animationStep])
-
       let currentColor: number | undefined = undefined
       for (let i = 0; i <= animationStep && i < result.steps.length; i++) {
         const step = result.steps[i]
-        console.log('[v0] Checking step', i, ':', step)
         if (step.action === 'assign' && step.node === node) {
           currentColor = step.color
-          console.log('[v0] Found assign for node', node, 'color:', step.color)
         } else if (step.action === 'backtrack' && step.node === node) {
           currentColor = undefined
-          console.log('[v0] Found backtrack for node', node)
         }
       }
 
