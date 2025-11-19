@@ -7,8 +7,7 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Map Coloring Solver',
-  description: 'Solve graph coloring problems with backtracking visualization',
+  title: 'Act 3.4 Backtracking',
   icons: {
     icon: [
       {
